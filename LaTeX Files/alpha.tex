@@ -1,0 +1,479 @@
+\documentclass[8pt,oneside]{extbook}
+% I would be needing to set a extra features provided by this class as well as I would be needing to setup for smallest font. Smallest font leads to most content
+
+\usepackage{dependencies}
+\usepackage{titlepage}
+\usepackage{parttoc}
+\usepackage{chaptertoc}
+\usepackage{questions}
+\usepackage{general}
+
+\usepackage{fontspec}
+\setmainfont{Lexend}
+
+\geometry{
+  left=0.5cm,
+  right=0.5cm,
+  top=0.5cm,
+  bottom=0.5cm,
+}
+
+
+% \texorpdfstring{}
+% texorpdfstring{}
+% IfvalueT/F
+% \NewDocumentCommand \RenewDocumentCommand \DeclareDocumentCommand
+% \NewDocumentCommand{\foo}{O{bar}mmmm}{ ... }
+% \let -> \NewCommandCopy
+% \defcounter \deflength
+% \enquote
+% \overset
+% \vspace \hspace \mspace 
+% \ForEach \ForEachSublevel
+% \FunctionForEach
+% \ifnumcomp \ifdimcomp
+
+% Number of parts are limited to 16
+
+\setcvFont{42}{18}{16}
+
+
+
+
+
+\registerchapter{ch-hollow}{chaptertitle}
+\registersection{sec-absence}{ch-hollow}
+\registersection{sec-carto}{ch-hollow}
+
+\registerchapter{ch-another}{chaptertitle}
+\registersection{sec-only}{ch-another}
+
+\registerpart{chaptertitle}{On the Nature of Nothing}
+
+
+
+\begin{document}
+	\pagenumbering{roman}
+    \makecoverpage
+    \makeparttoc
+
+	\pagenumbering{arabic}
+	
+    \createpart{chaptertitle}{On the Nature of Nothing}
+    \makechaptertoc{chaptertitle}
+
+
+    \createchapter{ch-hollow}{The Hollow at the Centre}
+    \createsection{sec-absence}{What Absence Tastes Like}
+    \createsection{sec-carto}{A Cartography of Gaps}
+
+    \createchapter{ch-another}{Another One}
+    \createsection{sec-only}{Its Only Section}
+
+
+
+    \begin{multicols}{2}
+	
+	\begin{Boxy}
+		Here is something here
+	\end{Boxy}
+	
+	\begin{DefBox}{Some term}
+		Some Definition
+	\end{DefBox}
+	
+	\end{multicols}
+	
+	
+	
+	\begin{Boxy}
+		Page wide text 
+	\end{Boxy}
+	
+	\begin{Proof}
+		\begin{ClaimBox}
+			Claim: I am not alive
+		\end{ClaimBox}
+		\begin{ProofSteps}
+			Is this working
+		\end{ProofSteps}
+		\begin{ProofSteps}
+			Is this working
+		\end{ProofSteps}
+		\begin{ProofSteps}
+			Is this working
+		\end{ProofSteps}
+		\begin{ProofSteps}
+			Is this working
+		\end{ProofSteps}
+		Thanks and regards'
+		
+		
+		\ProofStep{
+			Hi
+		
+		}
+	\end{Proof}
+
+	\begin{codebox}{c}{Binary Search Implementation}
+		int main() {
+			// Print hello world
+			printf("Hello, World!\n");
+			return 0;
+		}
+	\end{codebox}
+	
+	
+	
+	\begin{codebox}{cpp}{Something}
+#include <vector>
+		
+int binarySearch(std::vector<int>& arr, int target) {
+	int left = 0;
+	int right = arr.size() - 1;
+				
+	while (left <= right) {
+		int mid = left + (right - left) / 2;
+					
+		if (arr[mid] == target)
+		return mid;  // Found it!
+		else if (arr[mid] < target)
+		left = mid + 1;
+		else
+			right = mid - 1;
+		}
+return -1;  // Not found
+}
+	\end{codebox}
+
+	
+	\begin{multicols}{2}
+
+	\section{Implementation}
+	
+	Here's the implementation of our sorting algorithm:
+
+	\begin{codebox}{Bash}{Another ease tester}
+		void bubbleSort(int arr[], int n) {
+			// Outer loop for passes
+			for (int i = 0; i < n-1; i++) {
+				// Inner loop for comparisons
+				for (int j = 0; j < n-i-1; j++) {
+					if (arr[j] > arr[j+1]) {
+						// Swap elements
+						int temp = arr[j];
+						arr[j] = arr[j+1];
+						arr[j+1] = temp;
+					}
+				}
+			}
+		}
+	\end{codebox}
+
+	The algorithm has a time complexity of $O(n^2)$.
+	
+	
+	
+	\end{multicols}
+	
+	
+	\begin{example}{blue}
+		Hi
+	\end{example}
+	
+	\begin{solution}{green}
+		This is solution
+	\end{solution}
+	
+	
+	\begin{example}
+		Solve for $x$: $2x + 5 = 13$
+	\end{example}
+	
+	\begin{solution}
+		Subtract 5 from both sides: $2x = 8$
+	\end{solution}
+	
+	\begin{solution}
+		Alternative method: We can also write it as $x = \frac{13-5}{2} = 4$
+	\end{solution}
+	
+
+	
+	\begin{example}
+		Find the derivative of $f(x) = x^2 + 3x$
+	\end{example}
+	
+	\begin{solution}
+		Using power rule: $f'(x) = 2x + 3$
+	\end{solution}
+	
+	
+	
+	\section{Change of Section}
+	
+	
+	\begin{example}{blue}
+		Hi
+	\end{example}
+	
+	\begin{solution}{green}
+		This is solution
+	\end{solution}
+	
+	
+	\begin{example}
+		Solve for $x$: $2x + 5 = 13$
+	\end{example}
+	
+	\begin{solution}
+		Subtract 5 from both sides: $2x = 8$
+	\end{solution}
+	
+	\begin{solution}
+		Alternative method: We can also write it as $x = \frac{13-5}{2} = 4$
+	\end{solution}
+	
+	
+	
+	\begin{example}
+		Find the derivative of $f(x) = x^2 + 3x$
+	\end{example}
+	
+	\begin{solution}
+		Using power rule: $f'(x) = 2x + 3$
+	\end{solution}
+	
+	
+	\begin{multicols}{2}
+		
+		\begin{example}{blue}
+			Hi
+		\end{example}
+		
+		\begin{solution}{green}
+			This is solution
+		\end{solution}
+		
+		
+		\begin{example}
+			Solve for $x$: $2x + 5 = 13$
+		\end{example}
+		
+		\begin{solution}
+			Subtract 5 from both sides: $2x = 8$
+		\end{solution}
+		
+		\begin{solution}
+			Alternative method: We can also write it as $x = \frac{13-5}{2} = 4$
+		\end{solution}
+		
+		
+		
+		\begin{example}
+			Find the derivative of $f(x) = x^2 + 3x$
+		\end{example}
+		
+		\begin{solution}
+			Using power rule: $f'(x) = 2x + 3$
+		\end{solution}
+		
+		
+		
+	\end{multicols}
+	
+	\begin{codeexample}
+		Write a function to swap two integers:
+		
+		\begin{codebox}{c}{test}
+			void swap(int *a, int *b) {
+				int temp = *a;
+				*a = *b;
+				*b = temp;
+			}
+		\end{codebox}
+	\end{codeexample}
+	
+	
+	
+	\begin{codesolution}
+		\begin{codebox}{c}{Test example}
+			// Solution code here
+		\end{codebox}
+	\end{codesolution}
+	
+	
+	
+	\begin{myTheorem}{Fermats Last Theorem}{thm:FermatsLastTheorem}
+		No three positive integers \(a\), \(b\) and \(c\) satisfy the equation \(a^{n} + b^{n} = c^{n}\) for any integer greater than two.
+	\end{myTheorem}
+	
+	
+	
+	
+	Here is a simple comment:
+	\pdfcomment{Just testing a basic note.}
+	
+	\bigskip
+	Here is a highlighted section:
+	\pdfmarkupcomment[markup=Highlight, color=yellow]
+	{important concept}{Explain this more clearly.}
+	
+	\bigskip
+	Here’s a strikeout:
+	\pdfmarkupcomment[markup=StrikeOut, color=red]
+	{remove this}{This is incorrect.}
+	
+	\bigskip
+	Underline example:
+	\pdfmarkupcomment[markup=Underline, color=blue]
+	{keep this}{This is correct and must remain.}
+	
+	\bigskip
+	Tooltip example:
+	\pdftooltip{Hover over this word}{This is hidden info!}
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+	\begin{interactivequestion}{Fibonacci Sequence}
+		% =========================
+		% TOP ROW
+		% =========================
+		\noindent
+		\begin{minipage}[t]{0.24\textwidth}
+		\vspace{0pt}
+		\begin{ocg}{KeyPoints}{keylayer}{0}
+		\begin{cornerbox}{blue}{Key Points / Taxonomy}
+		Bloom: Apply  
+
+		SOLO: Relational  
+
+		Recursion  
+
+		Dynamic Programming
+		\end{cornerbox}
+		\end{ocg}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.48\textwidth}
+		\vspace{0pt}
+
+		\begin{questionbox}{Question}
+		Write a function for the nth Fibonacci number.
+		\end{questionbox}
+
+		\vspace{6mm}
+
+		\centering
+		\ocgbutton{keylayer}{Key Points}
+		\ocgbutton{variationlayer}{Variations}
+		\ocgbutton{reslayer}{Resources}
+		\ocgbutton{hintlayer}{Hint}
+		\ocgbutton{sollayer}{Solution}
+		\ocgbutton{anslayer}{Answer}
+
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.24\textwidth}
+		\vspace{0pt}
+		\begin{ocg}{Resources}{reslayer}{0}
+		\begin{cornerbox}{orange}{Resources / Expected Time}
+		Expected Time: 5 minutes  
+
+		Pen and Paper allowed  
+
+		No calculator
+		\end{cornerbox}
+		\end{ocg}
+		\end{minipage}
+
+		% =========================
+		% SPACE BETWEEN ROWS
+		% =========================
+		\vspace{10mm}
+
+		% =========================
+		% SECOND ROW
+		% =========================
+		\noindent
+		\begin{minipage}[t]{0.24\textwidth}
+		\vspace{0pt}
+		\begin{ocg}{Variations}{variationlayer}{0}
+		\begin{cornerbox}{purple}{Possible Variations}
+		Iterative version  
+
+		Matrix exponentiation  
+
+		Memoized recursion  
+
+		Tail recursion
+		\end{cornerbox}
+		\end{ocg}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.48\textwidth}
+		\vspace{0pt}
+
+		\begin{ocg}{Hint}{hintlayer}{0}
+		\begin{hintbox}
+		Base case: if n is less than or equal to one, return n.  
+
+		The recurrence relation is F(n) equals F(n-1) plus F(n-2).
+		\end{hintbox}
+		\end{ocg}
+
+		\vspace{10mm}
+
+		\begin{ocg}{Answer}{anslayer}{0}
+		\begin{onewordbox}
+		\Huge Recursion
+		\end{onewordbox}
+		\end{ocg}
+
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.24\textwidth}
+		\vspace{0pt}
+		\begin{ocg}{SolutionLink}{sollayer}{0}
+		\begin{cornerbox}{green}{Solution Link}
+		See detailed solution on page \pageref{fibo_solution}
+		\end{cornerbox}
+		\end{ocg}
+		\end{minipage}
+
+	\end{interactivequestion}
+
+
+
+
+
+
+
+
+
+
+
+
+
+	\newpage
+	Hello
+
+	\newpage
+	Another hi
+
+	\newpage
+	\phantomsection
+	Hi \label{fibo_solution}
+
+
+\end{document}

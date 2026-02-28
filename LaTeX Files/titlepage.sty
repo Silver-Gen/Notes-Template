@@ -1,0 +1,165 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{titlepage}[DCover Fixed]
+
+% Colors
+\definecolor{coverstrip}{RGB}{234, 73, 38}
+\definecolor{coverribbon}{RGB}{108, 147, 211}
+\definecolor{mountaininner}{RGB}{22,22,22}
+\definecolor{mountainouter}{RGB}{64,47,29}
+
+
+% Variables for Storage
+\newcommand{\@cover@strip}{0.15}
+\newcommand{\@cover@ribbon}{1.5}
+\newcommand{\@cover@title}{<Placeholder Title>}
+\newcommand{\@cover@author}{<Placeholder Name>}
+\newcommand{\@cover@q}{<Placeholder Quote>}
+\newcommand{\@cover@subject}{<Placeholder Subject>}
+\newcommand{\@cover@title@font}{36}
+\newcommand{\@cover@author@font}{18}
+\newcommand{\@cover@q@font}{12}
+\newcommand{\@imagelocation}{images/bkd.jpg}
+
+% Setters
+\newcommand{\setcvText}[4]{
+    \renewcommand{\@cover@title}{#1}
+    \renewcommand{\@cover@author}{#2}
+    \renewcommand{\@cover@q}{#3}
+    \renewcommand{\@cover@subject}{#4}
+}
+\newcommand{\setcvFont}[3]{
+    \renewcommand{\@cover@title@font}{#1}
+    \renewcommand{\@cover@author@font}{#2}
+    \renewcommand{\@cover@q@font}{#3}
+}
+\newcommand{\imgloc}[1]{
+    \renewcommand{\@imagelocation}{#1}
+}
+
+\newcommand\fadingtext[3][]{%
+  \begin{tikzfadingfrompicture}[name=fading letter]
+    \node[text=transparent!0,inner xsep=0pt,outer xsep=0pt,#1] {#3};
+  \end{tikzfadingfrompicture}%
+  \begin{tikzpicture}[baseline=(textnode.base)]
+    \node[inner sep=0pt,outer sep=0pt,#1](textnode){\phantom{#3}}; 
+    \shade[path fading=fading letter,#2,fit fading=false]
+    (textnode.south west) rectangle (textnode.north east);% 
+  \end{tikzpicture}% 
+}
+
+
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+
+% Page Functionality Commands
+\newcommand{\makecoverpage}{
+
+    \thispagestyle{empty}
+
+    
+
+    \begin{tikzpicture}[remember picture, overlay]
+        
+        % Strip on the Right
+        \fill[coverstrip]
+            (current page.north west)
+            rectangle
+            ++(\@cover@strip\pagewidth,-\pageheight);
+        
+        \node[
+            rotate=90,
+            anchor=center,
+            text=white,
+            font=\merriweather\addfontfeatures{LetterSpace=16}\bfseries\fontsize{\fpeval{\@cover@strip * 350}}{12}\selectfont
+        ] at ([xshift=\dimexpr\fpeval{0.45*\@cover@strip}\pagewidth\relax,yshift=-0.5\paperheight]current page.north west)
+        {\@cover@subject};
+
+
+        % Top Ribbon
+        \fill[coverribbon]
+            ([xshift=\dimexpr \fpeval{1*\@cover@strip}\paperwidth\relax,yshift=0]current page.north west)
+            rectangle
+            ++(\dimexpr \paperwidth - \fpeval{1*\@cover@strip}\paperwidth\relax,-\fpeval{(\@cover@title@font+\@cover@author@font+\@cover@q@font)*\@cover@ribbon}pt);
+        \node[
+            anchor=west,
+            text=white,
+            font=\merriweather\bfseries\fontsize{\fpeval{\@cover@title@font}}{12}\selectfont
+        ] at ([xshift=\dimexpr \fpeval{1*\@cover@strip}\paperwidth + 12pt\relax,
+            yshift=-\dimexpr \fpeval{(\@cover@title@font+\@cover@author@font+\@cover@q@font)*\@cover@ribbon * 0.33}pt\relax]current page.north west)
+        {\@cover@title};
+        \node[
+            anchor=west,
+            font=\merriweather\bfseries\fontsize{\fpeval{\@cover@author@font}}{12}\selectfont
+        ] at ([xshift=\dimexpr \fpeval{1*\@cover@strip}\paperwidth + 24pt\relax,
+            yshift=-\dimexpr \fpeval{(\@cover@title@font+\@cover@author@font+\@cover@q@font)*\@cover@ribbon * 0.75}pt\relax]current page.north west)
+        {\@cover@author};
+        
+        
+        % Image
+        \begin{pgfonlayer}{background}
+        \node[
+            anchor=north west
+        ] at ([xshift=\fpeval{0.95*\@cover@strip}\pagewidth,
+               yshift=-\dimexpr \fpeval{(\@cover@title@font+\@cover@author@font+\@cover@q@font)*\@cover@ribbon*0.95}pt\relax
+        ]current page.north west)
+        {
+            \includegraphics{\@imagelocation}
+        };
+        \end{pgfonlayer}
+
+        \node[
+            anchor=center,
+            text=black!20,
+            font=\merriweather\itshape\fontsize{\fpeval{\@cover@q@font}}{12}\selectfont
+        ] at ([xshift=\dimexpr \fpeval{0.5*\@cover@strip}\paperwidth\relax,
+            yshift=-\dimexpr \fpeval{(\@cover@title@font+\@cover@author@font+\@cover@q@font)*\@cover@ribbon * 1.1}pt\relax]current page.north)
+        {\@cover@q};
+
+
+    \end{tikzpicture}
+    % For animation at the bottom left of the page
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[
+        anchor=south east, 
+        inner sep=0pt, 
+        outer sep=0pt
+    ]
+        at (current page.south east)
+      {
+        \begin{animateinline}[loop, autoplay]{10}%
+        \multiframe{30}{rT=0.0+0.025}{%
+          \begin{tikzpicture}
+            % MOUNTAIN
+            \shade[
+                left color=mountainouter, 
+                right color=mountainouter
+            ]
+              (0, 0) -- ++(-8, 0) -- ++(8, 2.6) -- cycle;
+
+            \useasboundingbox (-12, 0) rectangle (0, 5);
+
+            % COORDINATES OF SUFFERING
+            \pgfmathsetmacro{\offx}{-6.8 + 6.0*\rT}
+            \pgfmathsetmacro{\offy}{ (0.8 + 6*\rT)*0.325}
+            \pgfmathsetmacro{\stride}{35*sin(\rT*1080)}
+
+            % SISYPHUS 
+            \begin{scope}[shift={(\offx, \offy)}, rotate=18.0]
+                \fill[gray!50, draw=black, thick] (1.65, 0.85) circle (0.85);
+                \draw[white, ultra thick] (0.05, 0.52)--({0.38 + 0.30*sin(\stride)}, 0.0);
+                \draw[white, ultra thick] (0.05, 0.52)--({-0.28 - 0.30*sin(\stride)}, 0.0);
+                \draw[white, ultra thick] (0.05, 0.52) -- (0.48, 1.08);
+                \draw[white, ultra thick] (0.55, 1.30) circle (0.20);
+                \draw[white, ultra thick] (0.48, 1.08) -- (0.82, 0.92);
+            \end{scope}
+          \end{tikzpicture}
+        }
+        \end{animateinline}
+      };
+    \end{tikzpicture}
+
+
+    \newpage
+
+}

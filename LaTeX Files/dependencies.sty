@@ -1,0 +1,144 @@
+\NeedsTeXFormat{LaTeX2e}
+
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\RequirePackage{tikz}
+\usetikzlibrary{decorations.pathmorphing, shadings, positioning, arrows.meta, calc, shapes, backgrounds, fadings, fit, chains, shadows, matrix, graphs, graphdrawing, decorations.markings, intersections, decorations.pathreplacing, shadows.blur,arrows.meta}
+% Basically All the tikz and diagramming libararies I shall be needing. 
+
+\RequirePackage{tikzpagenodes} 
+% Potentially used for tikz setup for headers and footers
+
+\RequirePackage[most]{tcolorbox}
+% Shall be used for developing interesting boxes
+\tcbuselibrary{skins, breakable,listings}
+
+\RequirePackage{graphicx}
+% Used for insertion of images from external source
+
+\RequirePackage{svg}
+% Useful for importing and exporting SVG
+
+\RequirePackage{soul}
+% Required for Equation annotations and other packages
+
+\RequirePackage{xstring}
+% Dependency for code tcolbox to work.
+
+\RequirePackage{xcolor}
+% For setting up color wherever it shall be used
+
+\RequirePackage{calc}
+% Internal LaTeX addendums that allow it to be called a probably programming langauge
+
+\RequirePackage{bxcalc}
+% Extendented Functionality to calc
+
+\RequirePackage{xfp}
+% An interesting package for handling decimal usgae where numexpr fail, Specifically for fonts
+
+\RequirePackage{forloop}
+\RequirePackage{xparse}
+% Make LaTeX work as dictionary
+
+\RequirePackage{xifthen}
+% For setup of internal configurations
+
+\RequirePackage{etoolbox}
+% Provides list of macros
+
+\RequirePackage{keyval}
+% Implementation and needed for value par data scheme
+
+\RequirePackage{xsavebox}
+% Helpful repeating content without code replication
+
+\RequirePackage{ocgx2}
+% For Optional COntent Group Layers, PDF's inbuilt interactivity
+
+\RequirePackage{fancyvrb}
+\RequirePackage{fvextra}
+% "Sophisticated Verbatim Text" Text that are run as it is and do not interfere with LaTeX code parsers
+
+
+\RequirePackage{codeanatomy}
+% Useful for highlighting with listing codes (Very useful)
+
+\RequirePackage[ruled,vlined,linesnumbered]{algorithm2e}
+% For better typesetting of Algorithms
+
+\RequirePackage{amssymb}
+\RequirePackage{mathtools}
+\RequirePackage{esdiff}
+% Mathematical Typesetting
+
+\RequirePackage{annotate-equations}
+% Helps in annotation of equations
+
+\RequirePackage{multicol}
+% Used for setting up of 2-Column page
+
+\RequirePackage{ragged2e}
+% Text justification
+
+\RequirePackage{enumitem}
+% FOr list,  itemize, enumerate, description
+
+\RequirePackage{varwidth}
+% Similar to Minipage with variable length
+
+\RequirePackage{geometry}
+% Used for setting Geometry of a page (say margins and textarea width and text height)
+
+\RequirePackage{array}
+% New implementation of LaTeX Tabular and array
+
+\RequirePackage{multirow}
+% Used for Tables etc for merging rows (Somehow this is not a 'vanilla' feature in latex)
+
+\RequirePackage{fontawesome5}
+% Package for Icons 
+
+\RequirePackage{skillicons}
+% Icons for specific domains like Github Icon etc
+
+\RequirePackage{fontspec}
+\RequirePackage{lexend}
+\RequirePackage{merriweather}
+% Useful for FOnts selections
+
+\RequirePackage{hyperref}
+% One of the most important LaTeX packages
+
+\RequirePackage{datatool}
+% Also one of the most important packages But mostly concernes with Data manipulation and Databases
+
+\RequirePackage{afterpage}
+% Execute command after the next page break
+
+\RequirePackage{pdfcomment}
+% Setting up comments in PDFS
+
+\RequirePackage{repltext}
+% Control how text gets copied from a PDF file
+
+\RequirePackage{animate}
+% Package useful for animations and stuff
+
+%\RequirePackage{minim-math}
+% \RequirePackage{minim-xmp}
+%\RequirePackage{minim-pdf}
+% Used somewhere in LuaLaTeX for "allowing to make  PDFs fully PDF/A-compliant"
+
+\RequirePackage{attachfile}
+% Attach arbritrary files to a PDF
+
+\RequirePackage{embedfile}
+% Helps in embedding of a File in PDF
+
+\RequirePackage{pictochrono}
+% For small chrono clocks inline (Probably would be used later I Hvae no idea)
+
+\RequirePackage{parskip}
+% automatically adjusts paragraph indentation(Probably or can be removed)

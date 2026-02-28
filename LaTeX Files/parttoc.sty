@@ -1,0 +1,149 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{parttoc}
+
+%% Part Table of Contents — full page TikZ layout
+%%
+%% USAGE
+%%   \registerpart{Title}{Description}  before \makeparttoc
+%%   \makeparttoc                        emits the TOC page
+%%   \createpart{Title}{Description}    in body, fires \part only — description silent
+%%
+%% Requires two pdflatex runs for correct page numbers.
+
+%% PALETTE 
+\definecolor{ptoc@bg}     {RGB} {245,240,228}
+\definecolor{ptoc@gleft}  {HTML}{C1FBE1}
+\definecolor{ptoc@gright} {HTML}{97D9E0}
+\definecolor{ptoc@ftitle} {HTML}{1A6B5E}
+\definecolor{ptoc@fbody}  {HTML}{2C3E35}
+\definecolor{ptoc@frule}  {HTML}{39C8B3}
+\definecolor{ptoc@fframe} {HTML}{7EC8C0}
+
+%% COUNTERS 
+\newcounter{ptoc@countboxes}  
+\setcounter{ptoc@countboxes}{0}
+\newcounter{ptoc@cpartidx}    
+\setcounter{ptoc@cpartidx}{0}
+\newcounter{ptoc@i}
+
+%% REGISTRATION 
+\NewDocumentCommand{\registerpart}{mm}{%
+    \expandafter\def\csname ptocinfo@\arabic{ptoc@countboxes}@label\endcsname{#1}%
+    \expandafter\def\csname ptocinfo@\arabic{ptoc@countboxes}@value\endcsname{#2}%
+    \stepcounter{ptoc@countboxes}%
+}
+
+%% \createpart
+\NewDocumentCommand{\createpart}{mm}{%
+    \edef\ptoc@thislabel{ptoc:part:\arabic{ptoc@cpartidx}}%
+    \stepcounter{ptoc@cpartidx}%
+    \part[#1]{#1\label{\ptoc@thislabel}}%
+}
+
+%% RETRIEVAL 
+\NewDocumentCommand{\getpartlabel}{m}{%
+    \ifcsname ptocinfo@#1@label\endcsname
+        \csname ptocinfo@#1@label\endcsname
+    \else [??label:#1]\fi%
+}
+
+\NewDocumentCommand{\getpartvalue}{m}{%
+    \ifcsname ptocinfo@#1@value\endcsname
+        \csname ptocinfo@#1@value\endcsname
+    \else [??value:#1]\fi%
+}
+
+\NewDocumentCommand{\printallparts}{}{%
+    \forloop{ptoc@i}{0}{\value{ptoc@i} < \value{ptoc@countboxes}}{%
+        \noindent
+        \textbf{[\arabic{ptoc@i}]}\quad
+        \getpartlabel{\arabic{ptoc@i}}%
+        \textemdash{}%
+        \getpartvalue{\arabic{ptoc@i}}%
+        \par\medskip
+    }%
+}
+
+%% SINGLE BOX 
+%% #1 = index     #2 = col     #3 = row
+%% #4 = title     #5 = body
+\NewDocumentCommand{\ptoc@drawbox}{mmmmm}{%
+    \pgfmathsetmacro{\ptoc@bx}{#2 * 124}%
+    \pgfmathsetmacro{\ptoc@by}{-#3 * 124}%
+    \begin{scope}[shift={(\ptoc@bx pt, \ptoc@by pt)}]
+        \shade[
+            left color=ptoc@gleft,
+            right color=ptoc@gright,
+            rounded corners=3pt
+        ] (0pt,0pt) rectangle (108pt,-108pt);
+        \draw[
+            color=ptoc@fframe,
+            line width=0.5pt,
+            rounded corners=3pt
+        ] (0pt,0pt) rectangle (108pt,-108pt);
+        \draw[color=ptoc@fframe, line width=2pt]
+            (0pt,-4pt) -- (0pt,-104pt);
+        \node[
+            anchor=north west,
+            text=ptoc@ftitle,
+            font=\small\bfseries,
+            text width=84pt
+        ] at (12pt,-8pt) {#4};
+        \draw[color=ptoc@frule, line width=0.6pt]
+            (6pt,-28pt) -- (102pt,-28pt);
+        \node[
+            anchor=north west,
+            text=ptoc@fbody,
+            font=\scriptsize,
+            text width=84pt
+        ] at (12pt,-34pt) {#5};
+        %% Page number — subtract 1 to correct for \part's trailing page break
+        \node[
+            anchor=south east,
+            text=ptoc@ftitle,
+            font=\scriptsize\bfseries
+        ] at (102pt,-102pt) {%
+            \hyperref[ptoc:part:#1]{p.\,\the\numexpr\getpagerefnumber{ptoc:part:#1}\relax}
+        };
+    \end{scope}%
+}
+
+%% TOC PAGE 
+\NewDocumentCommand{\makeparttoc}{}{%
+    \clearpage
+    \thispagestyle{empty}
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[ptoc@bg]
+            (current page.south west) rectangle (current page.north east);
+        \begin{scope}[
+            shift={($(current page.north west)+(0.25\paperwidth,-0.05\paperheight)$)}
+        ]
+            \clip (-0.25\paperwidth,0) rectangle (0.75\paperwidth,-0.10\paperheight);
+            \node[
+                anchor=center,
+                font=\fontsize{24}{12}\selectfont,
+                name=parttitle
+            ] at (0.25\paperwidth,-0.05\paperheight)
+                {The Ledger Partition of this Book};
+            \draw[line width=0.8pt, color=ptoc@ftitle]
+                ([yshift=-4pt]parttitle.south west)
+                -- ([yshift=-4pt]parttitle.south east);
+        \end{scope}
+        \begin{scope}[
+            shift={($(current page.north west)+(0.05\paperwidth,-0.20\paperheight)$)}
+        ]
+            \forloop{ptoc@i}{0}{\value{ptoc@i} < \value{ptoc@countboxes}}{%
+                \ifnum\value{ptoc@i}<16
+                    \pgfmathsetmacro{\ptoc@col}{mod(\arabic{ptoc@i},4)}%
+                    \pgfmathsetmacro{\ptoc@row}{floor(\arabic{ptoc@i}/4)}%
+                    \ptoc@drawbox%
+                        {\arabic{ptoc@i}}%
+                        {\ptoc@col}{\ptoc@row}%
+                        {\getpartlabel{\arabic{ptoc@i}}}%
+                        {\getpartvalue{\arabic{ptoc@i}}}%
+                \fi
+            }%
+        \end{scope}
+    \end{tikzpicture}
+    \clearpage
+}

@@ -1,0 +1,248 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{general}
+
+\definecolor{sw_void}    {HTML}{1E1E24}
+\definecolor{sw_gutter}  {HTML}{0D1630}
+\definecolor{sw_iris}    {HTML}{4F4789}
+\definecolor{sw_dusk}    {HTML}{5F5894}
+\definecolor{sw_pink}    {HTML}{FF2975}
+\definecolor{sw_magenta} {HTML}{F222FF}
+\definecolor{sw_violet}  {HTML}{8C1EFF}
+\definecolor{sw_cyan}    {HTML}{00A5CF}
+\definecolor{sw_text}    {HTML}{E8E0FF}
+\definecolor{sw_dim}     {HTML}{7B73A8}
+\definecolor{sw_orange}  {HTML}{FF901F}
+\definecolor{sw_yellow}  {HTML}{FFD319}
+\definecolor{sw_amber}   {HTML}{FFB400}
+\definecolor{sw_crimson} {HTML}{F6511D}
+\definecolor{sw_linenr}  {HTML}{A6E3A1}
+
+\newcommand{\kw} [1]{{\color{sw_pink}\texttt{#1}}}
+\newcommand{\kwb}[1]{{\color{sw_magenta}\texttt{#1}}}
+\newcommand{\ty} [1]{{\color{sw_cyan}\texttt{#1}}}
+\newcommand{\cm} [1]{{\color{sw_dim}\textit{\texttt{#1}}}}
+\newcommand{\str}[1]{{\color{sw_orange}\texttt{#1}}}
+\newcommand{\cn} [1]{{\color{sw_yellow}\texttt{#1}}}
+\newcommand{\fn} [1]{{\color{sw_amber}\texttt{#1}}}
+\newcommand{\vn} [1]{{\color{sw_text}\texttt{#1}}}
+\newcommand{\pp} [1]{{\color{sw_crimson}\texttt{#1}}}
+
+\newlength{\sw@gutterwidth}
+\setlength{\sw@gutterwidth}{22pt}
+
+\lstdefinestyle{sw_inner}{
+  language         = {},
+  basicstyle       = \ttfamily\small\color{sw_text},
+  mathescape       = true,
+  numberstyle      = \fontsize{7}{9}\selectfont\color{sw_linenr}\makebox[\dimexpr\sw@gutterwidth-9pt\relax][c],
+  backgroundcolor  = {},
+  frame            = none,
+  tabsize          = 2,
+  numbers          = left,
+  numbersep        = 8pt,
+  xleftmargin      = \sw@gutterwidth,
+  xrightmargin     = 4pt,
+  showstringspaces = false,
+  breaklines       = true,
+  breakatwhitespace= true,
+  gobble           = 4,
+}
+
+\newcommand{\sw@bottomcaption}[2]{%
+  \vspace{2pt}%
+  \noindent
+  {\color{sw_iris}\rule{3pt}{0.4pt}}%
+  \hspace{4pt}%
+  {\fontsize{7}{7}\selectfont\bfseries%
+   \colorbox{sw_pink}{\color{sw_void}#1}}%
+  \ifstrempty{#2}{}{%
+    \hspace{6pt}%
+    {\fontsize{8}{8}\selectfont\color{sw_dusk}#2}%
+  }%
+  \hspace{4pt}%
+  {\color{sw_iris}\leaders\hrule height 0.4pt\hfill\kern0pt}%
+  \par\vspace{4pt}%
+}
+
+\NewTCBListing{codebox}{ m m }{
+  enhanced, breakable,
+  sharp corners,
+  notitle,
+  boxrule  = 0pt,
+  leftrule = 0pt,
+  colframe = sw_void,
+  colback  = sw_void,
+  left     = 6pt,
+  right    = 6pt,
+  top      = 6pt,
+  bottom   = 6pt,
+  before skip = 14pt,
+  after skip  = 2pt,
+  listing only,
+  listing options = {style = sw_inner},
+  overlay = {
+    \fill[sw_gutter]
+      (frame.north west)
+      rectangle
+      ([xshift=\sw@gutterwidth]frame.south west);
+    \fill[sw_pink]
+      (frame.north west)
+      rectangle
+      ([xshift=9pt]frame.south west);
+  },
+  after = {\sw@bottomcaption{#1}{#2}},
+}
+
+\newcommand{\codeinputbox}[3]{%
+  \tcbinputlisting{
+    enhanced, breakable,
+    sharp corners,
+    notitle,
+    boxrule  = 0pt,
+    leftrule = 0pt,
+    colframe = sw_void,
+    colback  = sw_void,
+    left     = 6pt,
+    right    = 6pt,
+    top      = 6pt,
+    bottom   = 6pt,
+    before skip = 14pt,
+    after skip  = 2pt,
+    listing only,
+    listing file    = {#3},
+    listing options = {style = sw_inner},
+    overlay = {
+      \fill[sw_gutter]
+        (frame.north west)
+        rectangle
+        ([xshift=\sw@gutterwidth]frame.south west);
+      \fill[sw_pink]
+        (frame.north west)
+        rectangle
+        ([xshift=9pt]frame.south west);
+    },
+    after = {\sw@bottomcaption{#1}{#2}},
+  }%
+}
+
+\lstdefinelanguage{cpp}     [C++]{C++}{}
+\lstdefinelanguage{mylatex} [LaTeX]{TeX}{}
+\lstdefinelanguage{objc}    [Objective]{C}{}
+\lstdefinelanguage{pseudocode}{}
+\lstdefinestyle{sw_c}    {style=sw_inner, language=C}
+\lstdefinestyle{sw_cpp}  {style=sw_inner, language=cpp}
+\lstdefinestyle{sw_py}   {style=sw_inner, language=Python}
+\lstdefinestyle{sw_java} {style=sw_inner, language=Java}
+\lstdefinestyle{sw_bash} {style=sw_inner, language=bash}
+\lstdefinestyle{sw_sql}  {style=sw_inner, language=SQL}
+\lstdefinestyle{sw_r}    {style=sw_inner, language=R}
+\lstdefinestyle{sw_tex}  {style=sw_inner, language=mylatex}
+\lstdefinestyle{sw_pseudo}{style=sw_inner,language=pseudocode}
+\lstdefinestyle{sw_plain}{style=sw_inner, language={}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% -----------------------------
+% OCG Button
+% -----------------------------
+\newcommand{\ocgbutton}[2]{%
+\tikz[baseline=-0.5ex]\node[
+rectangle,
+draw=red!70,
+fill=red!10,
+rounded corners=2pt,
+inner sep=2pt,
+font=\scriptsize\bfseries
+]{\switchocg{#1}{#2}};%
+}
+
+% -----------------------------
+% Interactive Question Container
+% -----------------------------
+\newtcolorbox{interactivequestion}[1]{
+enhanced,
+colback=gray!10,
+colframe=gray!70,
+fonttitle=\bfseries\large,
+title=#1,
+sharp corners,
+boxrule=2pt,
+before skip=10pt,
+after skip=10pt,
+breakable
+}
+
+% -----------------------------
+% Corner Boxes
+% -----------------------------
+\newtcolorbox{cornerbox}[2]{
+enhanced,
+colback=#1!5,
+colframe=#1!70!black,
+title=#2,
+fonttitle=\bfseries\scriptsize,
+sharp corners,
+boxrule=1pt,
+width=\linewidth,
+breakable
+}
+
+% -----------------------------
+% Question Box
+% -----------------------------
+\newtcolorbox{questionbox}[1]{
+enhanced,
+colback=white,
+colframe=black!50,
+fonttitle=\bfseries\small,
+title=#1,
+sharp corners,
+boxrule=1pt,
+breakable
+}
+
+% -----------------------------
+% Hint Box
+% -----------------------------
+\newtcolorbox{hintbox}{
+enhanced,
+colback=yellow!10,
+colframe=yellow!60!black,
+title=Hint,
+fonttitle=\bfseries\scriptsize,
+sharp corners,
+boxrule=1pt,
+breakable
+}
+
+% -----------------------------
+% One Word Answer Box
+% -----------------------------
+\newtcolorbox{onewordbox}{
+enhanced,
+colback=black!5,
+colframe=black!70,
+title=One Word Answer,
+fonttitle=\bfseries\scriptsize,
+sharp corners,
+boxrule=1pt,
+center title,
+halign=center,
+breakable
+}

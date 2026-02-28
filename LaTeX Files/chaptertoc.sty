@@ -1,0 +1,197 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{chaptertoc}
+\RequirePackage{etoolbox}
+\RequirePackage{tikz}
+\RequirePackage{multicol}
+\RequirePackage{calc}
+
+%%  chaptertoc.sty
+%%
+%%  REGISTRATION  (hierarchy only)
+%%    \registerchapter{key}{partkey}
+%%    \registersection{key}{chapterkey}
+%%
+%%  CREATION  (titles go here)
+%%    \createchapter{key}{Title}
+%%    \createsection{key}{Title}
+%%
+%%  TOC
+%%    \makechaptertoc{partkey}
+%%
+%%  Keys: letters, digits, hyphens only.
+
+%%  Palette (matches parttoc) 
+\colorlet{ctoc@bg}    {white}
+\definecolor{ctoc@header}{HTML}{1A6B5E}
+\definecolor{ctoc@rule}  {HTML}{39C8B3}
+\definecolor{ctoc@chap}  {HTML}{1A6B5E}
+\definecolor{ctoc@sec}   {HTML}{2C3E35}
+\definecolor{ctoc@page}  {HTML}{1A6B5E}
+\definecolor{ctoc@dot}   {HTML}{39C8B3}
+
+%%  Comma-list helper 
+\newcommand{\ctoc@listadd}[2]{%
+    \ifcsname #1\endcsname
+        \expandafter\xdef\csname #1\endcsname{\csname #1\endcsname,#2}%
+    \else
+        \expandafter\xdef\csname #1\endcsname{#2}%
+    \fi
+}
+
+%%  Registration 
+\NewDocumentCommand{\registerchapter}{mm}{%
+    \expandafter\xdef\csname ctoc-cpart-#1\endcsname{#2}%
+    \ctoc@listadd{ctoc-pchaps-#2}{#1}%
+}
+\NewDocumentCommand{\registersection}{mm}{%
+    \expandafter\xdef\csname ctoc-schap-#1\endcsname{#2}%
+    \ctoc@listadd{ctoc-csecs-#2}{#1}%
+}
+
+%%  Aux read-back 
+\NewDocumentCommand{\ctoc@reschap}{mm}{%
+    \expandafter\xdef\csname ctoc-ctitle-#1\endcsname{#2}%
+}
+\NewDocumentCommand{\ctoc@ressec}{mm}{%
+    \expandafter\xdef\csname ctoc-stitle-#1\endcsname{#2}%
+}
+
+%%  Creation 
+\NewDocumentCommand{\createchapter}{mm}{%
+    \expandafter\xdef\csname ctoc-ctitle-#1\endcsname{#2}%
+    \immediate\write\@auxout{\string\ctoc@reschap{#1}{#2}}%
+    \chapter{#2}%
+    \label{ctoc-c-#1}%
+}
+\NewDocumentCommand{\createsection}{mm}{%
+    \expandafter\xdef\csname ctoc-stitle-#1\endcsname{#2}%
+    \immediate\write\@auxout{\string\ctoc@ressec{#1}{#2}}%
+    \section{#2}%
+    \label{ctoc-s-#1}%
+}
+
+%%  Display counters 
+\newcounter{ctoc@chapnum}
+\newcounter{ctoc@secnum}
+
+%%  Row builders 
+
+%% Chapter row — bold number, bold title, bold page
+\newcommand{\ctoc@chaprow}[1]{%
+    \stepcounter{ctoc@chapnum}%
+    \setcounter{ctoc@secnum}{0}%
+    \noindent
+    \makebox[1.6em][l]{%
+        {\sffamily\bfseries\color{ctoc@chap}\arabic{ctoc@chapnum}}%
+    }%
+    {\sffamily\bfseries\color{ctoc@chap}%
+        \ifcsname ctoc-ctitle-#1\endcsname
+            \csname ctoc-ctitle-#1\endcsname
+        \else [#1]\fi
+    }%
+    {\color{ctoc@dot}\leaders\hbox{\footnotesize .}\hfill}%
+    {\sffamily\bfseries\color{ctoc@page}\pageref{ctoc-c-#1}}%
+    \par\vspace{1pt}%
+    \ifcsname ctoc-csecs-#1\endcsname
+        \edef\ctoc@seclist{\csname ctoc-csecs-#1\endcsname}%
+        \expandafter\forcsvlist\expandafter
+            {\expandafter\ctoc@secrow\expandafter}\expandafter{\ctoc@seclist}%
+    \fi
+    \vspace{4pt}%
+}
+
+%% Section row — indented, num.sub, normal weight
+\newcommand{\ctoc@secrow}[1]{%
+    \stepcounter{ctoc@secnum}%
+    \noindent\hspace{1.6em}%
+    \makebox[2.2em][l]{%
+        {\small\sffamily\color{ctoc@sec}%
+         \arabic{ctoc@chapnum}.\arabic{ctoc@secnum}}%
+    }%
+    {\small\sffamily\color{ctoc@sec}%
+        \ifcsname ctoc-stitle-#1\endcsname
+            \csname ctoc-stitle-#1\endcsname
+        \else [#1]\fi
+    }%
+    {\color{ctoc@dot}\leaders\hbox{\footnotesize .}\hfill}%
+    {\small\sffamily\color{ctoc@page}\pageref{ctoc-s-#1}}%
+    \par\vspace{0pt}%
+}
+
+%%  \makechaptertoc{partkey} 
+\NewDocumentCommand{\makechaptertoc}{m}{%
+    \clearpage
+    \thispagestyle{empty}%
+    %
+    % Background & Decorative Elements
+    \begin{tikzpicture}[remember picture, overlay]
+        % Soft background tint
+        \fill[ctoc@header!4]
+            (current page.south west) rectangle (current page.north east);
+
+        % Top Accent Bar
+        \fill[ctoc@header]
+            (current page.north west)
+            rectangle ($(current page.north east)+(0,-0.018\paperheight)$);
+
+        % Left spine accent bar
+        \fill[ctoc@header!65]
+            ($(current page.north west)+(0.07\paperwidth, 0)$)
+            rectangle
+            ($(current page.north west)+(0.074\paperwidth,-0.18\paperheight)$);
+
+        % Ghost decorative section symbol (top-right, very faint)
+        \node[
+            anchor=north east,
+            inner sep=0pt,
+            text=ctoc@header!7,
+            font=\fontsize{150}{150}\selectfont\sffamily\bfseries
+        ] at ($(current page.north east)+(-0.055\paperwidth,-0.008\paperheight)$) {\S};
+
+        % Thin rule below title area (lighter weight)
+        \draw[color=ctoc@rule!70, line width=0.5pt]
+            ($(current page.north west)+(0.08\paperwidth,-0.14\paperheight)$)
+            -- ($(current page.north east)+(-0.08\paperwidth,-0.14\paperheight)$);
+
+        % Thin bottom accent strip
+        \fill[ctoc@header!18]
+            (current page.south west)
+            rectangle ($(current page.south east)+(0,0.007\paperheight)$);
+    \end{tikzpicture}%
+    %
+    \vspace*{0.11\paperheight}%
+    \begingroup
+        \setlength{\parindent}{0pt}%
+        \setlength{\parskip}{0pt}%
+        %
+        % Small eyebrow label above title
+        \hspace*{0.08\paperwidth}%
+        {\fontsize{7}{7}\selectfont\sffamily\bfseries
+         \color{ctoc@header!50}\MakeUppercase{#1}}%
+        \par\vspace{0.4em}%
+        %
+        % Title
+        \hspace*{0.08\paperwidth}%
+        {\fontsize{28}{28}\selectfont\sffamily\bfseries\color{ctoc@header}CONTENTS}%
+        \par\vspace{1.2em}%
+        %
+        % Two-column body
+        \hspace*{0.08\paperwidth}%
+        \begin{minipage}{0.84\paperwidth}
+            \setlength{\columnsep}{3em}%
+            \setlength{\columnseprule}{0.35pt}%
+            \def\columnseprulecolor{\color{ctoc@rule!50}}%
+            \begin{multicols}{2}%
+                \setcounter{ctoc@chapnum}{0}%
+                \ifcsname ctoc-pchaps-#1\endcsname
+                    \edef\ctoc@chaplist{\csname ctoc-pchaps-#1\endcsname}%
+                    \expandafter\forcsvlist\expandafter
+                        {\expandafter\ctoc@chaprow\expandafter}\expandafter{\ctoc@chaplist}%
+                \else
+                    \noindent\textit{No chapters registered for `#1'.}\par
+                \fi
+            \end{multicols}%
+        \end{minipage}%
+    \endgroup
+    \clearpage
+}

@@ -1,0 +1,433 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{questions}
+
+% Shall contain page for Question Section TOC, Interactive Q, Interactive Sol 
+
+
+\definecolor{primary_blue}{HTML}{1B6B93}
+\definecolor{warm_gray}{HTML}{6B7280}
+\definecolor{definition_bg}{HTML}{ECFDF5}
+\definecolor{border_color}{HTML}{1B6B93}
+\definecolor{title_bg}{HTML}{1B6B93}
+\definecolor{box_color}{HTML}{cde4ff}
+\definecolor{box_border}{HTML}{5989cf}
+\definecolor{toc_bg_light}{HTML}{F0F8FF} 
+\definecolor{toc_bg_dark}{HTML}{E0FFFF}
+\definecolor{toc_frame}{HTML}{4682B4}    
+\definecolor{toc_title_bg}{HTML}{1E90FF} 
+\definecolor{toc_title_text}{HTML}{FFFFFF}
+\definecolor{cream}{HTML}{E6F0FA}
+\definecolor{pastelteal}{HTML}{D0F0EF}
+\definecolor{mediumteal}{HTML}{5DBFC1}
+\definecolor{almostwhite}{HTML}{F8F8F8}
+\definecolor{proofstep_bg}{HTML}{EFEFEF}
+\definecolor{chapter_ring}{HTML}{D4A017}     
+\definecolor{chapter_core}{HTML}{2D6A4F}     
+\definecolor{chapter_glow}{HTML}{F4F1DE}     
+\definecolor{chapter_shade}{HTML}{E9EDC9}  
+\definecolor{light_blue}{HTML}{87CEEB}
+\definecolor{teal}{HTML}{008080}
+\definecolor{mint}{HTML}{98FF98}
+\definecolor{olive}{HTML}{6B8E23}
+\definecolor{turquoise}{HTML}{40E0D0}
+\definecolor{indigo}{HTML}{4B0082}
+\definecolor{terminal_bg}{HTML}{1E1E1E}      
+\definecolor{terminal_text}{HTML}{D4D4D4}    
+\definecolor{terminal_keyword}{HTML}{569CD6} 
+\definecolor{terminal_string}{HTML}{CE9178}  
+\definecolor{terminal_comment}{HTML}{6A9955} 
+\definecolor{terminal_number}{HTML}{B5CEA8} 
+\definecolor{terminal_function}{HTML}{DCDCAA}
+\definecolor{terminal_border}{HTML}{3C3C3C}  
+\definecolor{mainbluebg}{RGB}{220, 235, 245}
+\definecolor{mainblueframe}{RGB}{100, 149, 237}
+\definecolor{hintbg}{RGB}{255, 243, 224}
+\definecolor{hintborder}{RGB}{255, 165, 0}
+\definecolor{questionbg}{RGB}{245, 245, 245}
+\definecolor{followupbg}{RGB}{230, 230, 250}
+\definecolor{followupborder}{RGB}{75, 0, 130}
+\definecolor{solutionbg}{RGB}{240, 255, 240}
+\definecolor{pitfallbg}{RGB}{255, 240, 245}
+\definecolor{pitfallborder}{RGB}{220, 20, 60}
+\definecolor{conceptbg}{RGB}{255, 245, 238}
+\definecolor{conceptborder}{RGB}{220, 20, 60}
+
+
+\newcounter{proofstep}
+\newcommand{\resetproofcounter}{\setcounter{proofstep}{0}}
+\newcounter{myboxcounter}[chapter] 
+\renewcommand{\themyboxcounter}{\arabic{myboxcounter}}
+\newcounter{interactivequestion}[section]  
+\renewcommand{\theinteractivequestion}{\thesection.\arabic{interactivequestion}}
+\newcounter{solutionpart}[interactivequestion]
+\renewcommand{\thesolutionpart}{\alph{solutionpart}}
+
+\AtBeginEnvironment{lstlisting}{\linespread{1}\selectfont}
+
+
+
+\newcommand{\lstnordfont}{%
+	\ttfamily\small\color{nord_text}%
+	\renewcommand{\baselinestretch}{1}\selectfont
+}
+
+\tcbset{
+	my_boxed_title_style/.style={
+		colback=title_bg,
+		colframe=border_color, 
+		fonttitle=\bfseries\large\color{white},
+		boxrule=0.4pt,
+		boxsep=3pt,
+		arc=2pt,
+		shadow={0.5mm}{-0.5mm}{0.2mm}{black!20} 
+	},
+}
+\tcbset{
+	my_main_box_style/.style={
+		enhanced,
+		breakable, 
+		colback=cream, 
+		boxrule=0.8pt,
+		arc=4pt,
+		outer arc=2pt, 
+		left=6pt, right=6pt, top=12pt, bottom=6pt, 
+		colframe=border_color,
+		shadow={1mm}{-1mm}{0.3mm}{black!15}, 
+		before skip=1.5em,
+		after skip=1.5em,
+		attach boxed title to top left={yshift=-4mm, xshift=1mm},
+		boxed title style=my_boxed_title_style, 
+	}
+}
+
+\newtcolorbox{DefBox}[2][]{
+	enhanced,
+	colback=definition_bg,
+	colframe=border_color,
+	fonttitle=\bfseries\large\color{white},
+	coltitle=white,
+	title={\faBook\ #2},
+	attach boxed title to top left={yshift=-2mm, xshift=3mm},
+	boxed title style={
+		colback=title_bg,
+		colframe=border_color,
+		boxrule=0.4pt,
+		boxsep=2pt,
+		arc=2pt,
+		shadow={0.5mm}{-0.5mm}{0.2mm}{black!20}
+	},
+	sharp corners,
+	boxrule=0.8pt,
+	left=2pt,
+	right=2pt,
+	top=2pt,
+	bottom=2pt,
+	before upper={\let\par\par\medskip},
+	before=\ignorespaces,
+	#1
+}
+\newtcolorbox{Boxy}{
+	enhanced,
+	boxrule = 0pt,
+	colback = box_color,
+	borderline west = {1pt}{0pt}{box_border},
+	borderline west = {0.75pt}{2pt}{box_border},
+	borderline east = {1pt}{0pt}{box_border},
+	borderline east = {0.75pt}{2pt}{box_border},
+	before skip = 0.2cm,
+	after skip = 0.5cm
+}
+
+\newtcolorbox{ClaimBox}[1][]{%
+	colback=pastelteal,
+	colframe=mediumteal,
+	sharp corners,
+	boxrule=0.5pt,
+	left=8pt,
+	right=8pt,
+	top=6pt,
+	bottom=6pt,
+	before skip=4pt,
+	after skip=8pt,
+	breakable,
+	fontupper=\normalsize,
+	#1
+}
+\newtcolorbox{Proof}[1][]{%
+	enhanced,
+	colback=almostwhite,
+	colframe=border_color,
+	fonttitle=\bfseries\large\color{white},
+	title={\faBalanceScale\ Proof},
+	attach boxed title to top left={yshift=-2mm, xshift=2.7mm},
+	boxed title style={
+		colback=primary_blue,
+		colframe=border_color,
+		boxrule=0.4pt,
+		boxsep=2pt,
+		arc=2pt,
+		shadow={0.5mm}{-0.5mm}{0.2mm}{black!20}
+	},
+	sharp corners,
+	boxrule=0.8pt,
+	left=5pt,
+	right=5pt,
+	top=4pt,
+	bottom=4pt,
+	before skip=6pt,
+	after skip=6pt,
+	breakable,
+	before upper={\setcounter{proofstep}{0}},
+	after upper={\hfill$\blacksquare$},
+	#1
+}
+\tcbset{
+	myboxstyle/.style={
+		enhanced, breakable,
+		sharp corners,
+		left skip=8mm,
+		attach boxed title to top left={yshift*=-\tcboxedtitleheight/2},
+		boxed title style={colframe=#1!40, height=6mm, bean arc, boxrule=1pt},
+		colback=#1!10, colframe=#1!30, boxrule=1pt,
+		coltitle=black, colbacktitle=#1!10,
+		fonttitle=\bfseries,
+		underlay boxed title={%
+			\node[circle, fill=#1!10, draw=#1!40, inner sep=1pt, minimum size=6mm, line width=1pt, font=\bfseries] (boxnumber) at ([xshift=-6mm]title.west) {\thetcbcounter};
+		},
+		underlay unbroken={%
+			\draw[#1!40, line width=1pt] (title.west)--(boxnumber);
+			\draw[#1!40, -{stealth}, line width=1pt] (boxnumber)--(boxnumber|-frame.south);
+		},
+		underlay first={%
+			\draw[#1!40, line width=1pt] (title.west)--(boxnumber);
+			\draw[#1!40, line width=1pt] (boxnumber)--(boxnumber|-frame.south);
+		},
+		underlay middle={%
+			\draw[#1!40, line width=1pt] (boxnumber|-frame.north)--(boxnumber|-frame.south);
+		},
+		underlay last={%
+			\draw[#1!40, -{stealth}, line width=1pt] (boxnumber|-frame.north)--(boxnumber|-frame.south);
+		},
+	}
+}
+\newtcolorbox[use counter=myboxcounter]{example}[1][]{%
+	myboxstyle=cyan, 
+	title=Example,
+	before upper={\setcounter{solutionpart}{1}\parskip=0.5em},  
+	#1
+}
+\newtcolorbox{solution}[1][]{%
+	enhanced, breakable,
+	sharp corners,
+	left skip=8mm,
+	attach boxed title to top left={yshift*=-\tcboxedtitleheight/2},
+	boxed title style={colframe=green!60, height=6mm, bean arc, boxrule=1pt},
+	colback=green!15, colframe=green!50, boxrule=1pt,
+	coltitle=black, colbacktitle=green!15,
+	fonttitle=\bfseries,
+	before upper={\refstepcounter{solutionpart}\parskip=0.5em},  % Increment first, then use
+	underlay boxed title={%
+		\node[circle, fill=green!15, draw=green!60, inner sep=1pt, minimum size=6mm, line width=1pt, font=\bfseries] (boxnumber) at ([xshift=-6mm]title.west) {\themyboxcounter};
+	},
+	underlay unbroken={%
+		\draw[green!60, line width=1pt] (title.west)--(boxnumber);
+		\draw[green!60, -{stealth}, line width=1pt] (boxnumber)--(boxnumber|-frame.south);
+	},
+	underlay first={%
+		\draw[green!60, line width=1pt] (title.west)--(boxnumber);
+		\draw[green!60, line width=1pt] (boxnumber)--(boxnumber|-frame.south);
+	},
+	underlay middle={%
+		\draw[green!60, line width=1pt] (boxnumber|-frame.north)--(boxnumber|-frame.south);
+	},
+	underlay last={%
+		\draw[green!60, -{stealth}, line width=1pt] (boxnumber|-frame.north)--(boxnumber|-frame.south);
+	},
+	title=Solution \alph{solutionpart}), #1
+}
+\newtcolorbox[use counter=myboxcounter]{codeexample}[1][]{%
+	myboxstyle=cyan, 
+	title=Code Example,
+	before upper={\setcounter{solutionpart}{0}\parskip=0pt},  % No extra parskip for code
+	top=2pt, bottom=2pt,  % Tighter spacing for code
+	#1
+}
+\newtcolorbox{codesolution}[1][]{%
+	enhanced, breakable,
+	sharp corners,
+	left skip=8mm,
+	attach boxed title to top left={yshift*=-\tcboxedtitleheight/2},
+	boxed title style={colframe=green!60, height=6mm, bean arc, boxrule=1pt},
+	colback=green!15, colframe=green!50, boxrule=1pt,
+	coltitle=black, colbacktitle=green!15,
+	fonttitle=\bfseries,
+	before upper={\refstepcounter{solutionpart}\parskip=0pt},  % No extra parskip for code
+	top=2pt, bottom=2pt,  % Tighter spacing
+	underlay boxed title={%
+		\node[circle, fill=green!15, draw=green!60, inner sep=1pt, minimum size=6mm, line width=1pt, font=\bfseries] (boxnumber) at ([xshift=-6mm]title.west) {\themyboxcounter};
+	},
+	underlay unbroken={%
+		\draw[green!60, line width=1pt] (title.west)--(boxnumber);
+		\draw[green!60, -{stealth}, line width=1pt] (boxnumber)--(boxnumber|-frame.south);
+	},
+	underlay first={%
+		\draw[green!60, line width=1pt] (title.west)--(boxnumber);
+		\draw[green!60, line width=1pt] (boxnumber)--(boxnumber|-frame.south);
+	},
+	underlay middle={%
+		\draw[green!60, line width=1pt] (boxnumber|-frame.north)--(boxnumber|-frame.south);
+	},
+	underlay last={%
+		\draw[green!60, -{stealth}, line width=1pt] (boxnumber|-frame.north)--(boxnumber|-frame.south);
+	},
+	title=Solution \alph{solutionpart}), #1
+}
+\newtcbtheorem{Theorem}{}{
+	enhanced,
+	sharp corners,
+	attach boxed title to top left={
+		xshift=-1mm,
+		yshift=-5mm,
+		yshifttext=-1mm
+	},
+	top=1.5em,
+	colback=white,
+	colframe=blue!75!black,
+	fonttitle=\bfseries,
+	boxed title style={
+		sharp corners,
+		size=small,
+		colback=blue!75!black,
+		colframe=blue!75!black,
+	} 
+}{thm}
+\newenvironment{myTheorem}[2]{ \begin{Theorem}[adjusted title=#1]{}{#2} 
+		\textbf{Theorem \thetcbcounter.} }{\end{Theorem}}
+
+
+
+
+
+
+
+\newcommand{\ProofStep}[1]{
+	\refstepcounter{proofstep}
+	\vspace{1.5ex}
+	\noindent
+	\fcolorbox{gray!40}{proofstep_bg}{%
+		\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{%
+			\vspace{0.5ex}
+			\hspace{1ex}%
+			\textbf{\color{primary_blue}Step \arabic{proofstep}.}~#1%
+			\vspace{0.5ex}
+		}%
+	}
+	\par\vspace{1.5ex}
+}
+
+\newenvironment{ProofSteps}
+{\setcounter{proofstep}{0}\begingroup}
+{\endgroup}
+
+\newcommand{\startmulticol}[1]{\begin{multicols}{#1}}
+\newcommand{\stopmulticol}{\end{multicols}}
+\newcommand{\startmulticolstar}[1]{\begin{multicols*}{#1}}
+\newcommand{\stopmulticolstar}{\end{multicols*}}
+\setlength{\columnsep}{18pt}
+\setlength{\columnseprule}{0pt}
+
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\code}[1]{{\normalsize\color{warm_gray}\texttt{#1}}}
+\newcommand{\highlight}[1]{\colorbox{yellow}{#1}}
+\newcommand*{\Perm}[2]{{}^{#1}\!P_{#2}}
+\newcommand*{\Comb}[2]{{}^{#1}C_{#2}}
+\newlength{\boxheight}
+\newcommand{\calculateboxheight}[4]{%
+	% #1 = hint box, #2 = followup box, #3 = pitfall box, #4 = concept box
+	\newlength{\hintHeight}%
+	\newlength{\followupHeight}%
+	\newlength{\pitfallHeight}%
+	\newlength{\conceptHeight}%
+	\newlength{\leftColumnHeight}%
+	\newlength{\rightColumnHeight}%
+	%
+	\setlength{\hintHeight}{\dimexpr\ht#1+\dp#1\relax}%
+	\setlength{\followupHeight}{\dimexpr\ht#2+\dp#2\relax}%
+	\setlength{\pitfallHeight}{\dimexpr\ht#3+\dp#3\relax}%
+	\setlength{\conceptHeight}{\dimexpr\ht#4+\dp#4\relax}%
+	%
+	\setlength{\leftColumnHeight}{\dimexpr\hintHeight+\followupHeight\relax}%
+	\setlength{\rightColumnHeight}{\dimexpr\pitfallHeight+\conceptHeight\relax}%
+	%
+	\ifdim\leftColumnHeight>\rightColumnHeight%
+	\setlength{\boxheight}{\leftColumnHeight}%
+	\else%
+	\setlength{\boxheight}{\rightColumnHeight}%
+	\fi%
+	%
+	\setlength{\boxheight}{\dimexpr\boxheight*150/100\relax}%
+}
+
+
+
+
+\renewcommand{\@makechapterhead}[1]{%
+	\vspace*{30pt}
+	{
+		\parindent \z@ \raggedright \normalfont
+		\noindent{\color{teal}\rule{\textwidth}{3pt}}
+		\vspace{2pt}
+		\noindent{\color{turquoise}\rule{\textwidth}{1pt}}
+		\vspace{8pt}
+		\noindent\colorbox{primary_blue}{%
+			\begin{minipage}{\dimexpr\textwidth-2\fboxsep}
+				\vspace{12pt}
+				\ifnum\value{chapter}>0
+				\hspace{10pt}%
+				{\fontsize{42}{48}\selectfont\bfseries\color{white}\thechapter}%
+				\hspace{15pt}%
+				{\color{turquoise}\rule{2pt}{40pt}}%
+				\hspace{15pt}%
+				\raisebox{10pt}{\parbox{0.75\textwidth}{%
+						{\fontsize{28}{34}\selectfont\bfseries\color{white}#1}%
+				}}%
+				\else
+				\hspace{10pt}%
+				{\fontsize{20}{28}\selectfont\bfseries\color{white}#1}%
+				\fi
+				\vspace{12pt}
+			\end{minipage}%
+		}
+		
+		\vspace{2pt}
+		\noindent{\color{turquoise}\rule{\textwidth}{1pt}}
+		\vspace{2pt}
+		\noindent{\color{teal}\rule{\textwidth}{3pt}}
+		\vspace{25pt}%
+	}%
+}
+
+\renewcommand{\@makeschapterhead}[1]{%
+	\vspace*{30pt}%
+	{%
+		\parindent \z@ \raggedright \normalfont
+		\noindent{\color{teal}\rule{\textwidth}{3pt}}
+		\vspace{2pt}
+		\noindent{\color{turquoise}\rule{\textwidth}{1pt}}
+		\vspace{8pt}
+		\noindent\colorbox{primary_blue}{%
+			\begin{minipage}{\dimexpr\textwidth-2\fboxsep}
+				\vspace{12pt}
+				\hspace{10pt}%
+				{\fontsize{28}{34}\selectfont\bfseries\color{white}#1}%
+				\vspace{12pt}
+			\end{minipage}%
+		}
+		
+		\vspace{2pt}
+		\noindent{\color{turquoise}\rule{\textwidth}{1pt}}
+		\vspace{2pt}
+		\noindent{\color{teal}\rule{\textwidth}{3pt}}
+		\vspace{25pt}%
+	}%
+}

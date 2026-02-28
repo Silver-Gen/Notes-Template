@@ -10,6 +10,12 @@
 
 \usepackage{fontspec}
 \setmainfont{Lexend}
+% Helps in suppressing errors
+\DeclareFontShape{TU}{Lexend(0)}{m}{it}{<->ssub*Lexend(0)/m/n}{}
+\DeclareFontShape{TU}{Lexend(0)}{m}{sl}{<->ssub*Lexend(0)/m/n}{}
+\DeclareFontShape{TU}{Lexend(0)}{b}{it}{<->ssub*Lexend(0)/b/n}{}
+\DeclareFontShape{TU}{Lexend(0)}{b}{sl}{<->ssub*Lexend(0)/b/n}{}
+
 
 \geometry{
   left=0.5cm,

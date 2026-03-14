@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{questions}
+
 
 % Shall contain page for Question Section TOC, Interactive Q, Interactive Sol 
 
@@ -51,6 +51,11 @@
 \definecolor{pitfallborder}{RGB}{220, 20, 60}
 \definecolor{conceptbg}{RGB}{255, 245, 238}
 \definecolor{conceptborder}{RGB}{220, 20, 60}
+\definecolor{exampleblue}{HTML}{e6f0fa}
+\definecolor{solutioncream}{HTML}{fff7ed}
+\definecolor{exampleblueborder}{HTML}{b3cde8}   % a darker shade for the frame
+\definecolor{solutioncreamborder}{HTML}{f0c89a}  % a warm amber for the frame
+\definecolor{solutioncreamtitle}{HTML}{f5a623}   % title/circle accent
 
 
 \newcounter{proofstep}
@@ -211,39 +216,77 @@
 	}
 }
 \newtcolorbox[use counter=myboxcounter]{example}[1][]{%
-	myboxstyle=cyan, 
-	title=Example,
-	before upper={\setcounter{solutionpart}{1}\parskip=0.5em},  
-	#1
+    enhanced, breakable,
+    sharp corners,
+    colback=exampleblue,
+    colframe=exampleblueborder,
+    boxrule=1pt,
+    coltitle=black,
+    colbacktitle=exampleblue,
+    fonttitle=\bfseries,
+    attach boxed title to top left={yshift*=-\tcboxedtitleheight/2},
+    boxed title style={
+        colframe=exampleblueborder,
+        height=6mm,
+        bean arc,
+        boxrule=1pt
+    },
+    before upper={\setcounter{solutionpart}{1}\parskip=0.5em},
+    title=Example~\themyboxcounter,
+    #1
 }
+
 \newtcolorbox{solution}[1][]{%
-	enhanced, breakable,
-	sharp corners,
-	left skip=8mm,
-	attach boxed title to top left={yshift*=-\tcboxedtitleheight/2},
-	boxed title style={colframe=green!60, height=6mm, bean arc, boxrule=1pt},
-	colback=green!15, colframe=green!50, boxrule=1pt,
-	coltitle=black, colbacktitle=green!15,
-	fonttitle=\bfseries,
-	before upper={\refstepcounter{solutionpart}\parskip=0.5em},  % Increment first, then use
-	underlay boxed title={%
-		\node[circle, fill=green!15, draw=green!60, inner sep=1pt, minimum size=6mm, line width=1pt, font=\bfseries] (boxnumber) at ([xshift=-6mm]title.west) {\themyboxcounter};
-	},
-	underlay unbroken={%
-		\draw[green!60, line width=1pt] (title.west)--(boxnumber);
-		\draw[green!60, -{stealth}, line width=1pt] (boxnumber)--(boxnumber|-frame.south);
-	},
-	underlay first={%
-		\draw[green!60, line width=1pt] (title.west)--(boxnumber);
-		\draw[green!60, line width=1pt] (boxnumber)--(boxnumber|-frame.south);
-	},
-	underlay middle={%
-		\draw[green!60, line width=1pt] (boxnumber|-frame.north)--(boxnumber|-frame.south);
-	},
-	underlay last={%
-		\draw[green!60, -{stealth}, line width=1pt] (boxnumber|-frame.north)--(boxnumber|-frame.south);
-	},
-	title=Solution \alph{solutionpart}), #1
+    enhanced, breakable,
+    sharp corners,
+    left skip=8mm,
+    attach boxed title to top left={yshift*=-\tcboxedtitleheight/2},
+    boxed title style={
+        colframe=solutioncreamborder,
+        height=6mm,
+        bean arc,
+        boxrule=1pt
+    },
+    colback=solutioncream,
+    colframe=solutioncreamborder,
+    boxrule=1pt,
+    coltitle=black,
+    colbacktitle=solutioncream,
+    fonttitle=\bfseries,
+    before upper={\refstepcounter{solutionpart}\parskip=0.5em},
+    underlay boxed title={%
+        \node[circle,
+              fill=solutioncream,
+              draw=solutioncreamborder,
+              inner sep=1pt,
+              minimum size=6mm,
+              line width=1pt,
+              font=\bfseries
+             ] (boxnumber)
+             at ([xshift=-6mm]title.west) {\themyboxcounter};
+    },
+    underlay unbroken={%
+        \draw[solutioncreamborder, line width=1pt]
+            (title.west)--(boxnumber);
+        \draw[solutioncreamborder, -{stealth}, line width=1pt]
+            (boxnumber)--(boxnumber|-frame.south);
+    },
+    underlay first={%
+        \draw[solutioncreamborder, line width=1pt]
+            (title.west)--(boxnumber);
+        \draw[solutioncreamborder, line width=1pt]
+            (boxnumber)--(boxnumber|-frame.south);
+    },
+    underlay middle={%
+        \draw[solutioncreamborder, line width=1pt]
+            (boxnumber|-frame.north)--(boxnumber|-frame.south);
+    },
+    underlay last={%
+        \draw[solutioncreamborder, -{stealth}, line width=1pt]
+            (boxnumber|-frame.north)--(boxnumber|-frame.south);
+    },
+    title=Solution~\alph{solutionpart}),
+    #1
 }
 \newtcolorbox[use counter=myboxcounter]{codeexample}[1][]{%
 	myboxstyle=cyan, 
@@ -307,7 +350,7 @@
 
 
 
-
+	
 
 
 \newcommand{\ProofStep}[1]{
@@ -431,3 +474,7 @@
 		\vspace{25pt}%
 	}%
 }
+
+
+
+

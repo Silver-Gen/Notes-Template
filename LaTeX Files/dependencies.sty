@@ -1,10 +1,11 @@
 \NeedsTeXFormat{LaTeX2e}
 
+
 \RequirePackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
 \RequirePackage{tikz}
-\usetikzlibrary{decorations.pathmorphing, shadings, positioning, arrows.meta, calc, shapes, backgrounds, fadings, fit, chains, shadows, matrix, graphs, graphdrawing, decorations.markings, intersections, decorations.pathreplacing, shadows.blur,arrows.meta}
+\usetikzlibrary{shapes.geometric, decorations.pathmorphing, shadings, positioning, calc, shapes, backgrounds, fadings, fit, chains, shadows, matrix, graphs, graphdrawing, decorations.markings, intersections, decorations.pathreplacing, shadows.blur,arrows.meta}
 % Basically All the tikz and diagramming libararies I shall be needing. 
 
 \RequirePackage{tikzpagenodes} 
@@ -16,6 +17,9 @@
 
 \RequirePackage{graphicx}
 % Used for insertion of images from external source
+
+\RequirePackage{float}
+% Needed for something like [H] to be used with figures tables etc in multicols
 
 \RequirePackage{svg}
 % Useful for importing and exporting SVG
@@ -97,6 +101,9 @@
 \RequirePackage{multirow}
 % Used for Tables etc for merging rows (Somehow this is not a 'vanilla' feature in latex)
 
+\RequirePackage{caption}
+% Interesting feature to allow tables and pictures in floats like multicols
+
 \RequirePackage{fontawesome5}
 % Package for Icons 
 
@@ -110,6 +117,9 @@
 
 \RequirePackage{hyperref}
 % One of the most important LaTeX packages
+
+\RequirePackage{titlesec}
+% alternative, more flexible headers
 
 \RequirePackage{datatool}
 % Also one of the most important packages But mostly concernes with Data manipulation and Databases

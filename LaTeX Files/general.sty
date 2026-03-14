@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{general}
+
 
 \definecolor{sw_void}    {HTML}{1E1E24}
 \definecolor{sw_gutter}  {HTML}{0D1630}
@@ -17,21 +17,22 @@
 \definecolor{sw_crimson} {HTML}{F6511D}
 \definecolor{sw_linenr}  {HTML}{A6E3A1}
 
-\newcommand{\kw} [1]{{\color{sw_pink}\texttt{#1}}}
-\newcommand{\kwb}[1]{{\color{sw_magenta}\texttt{#1}}}
-\newcommand{\ty} [1]{{\color{sw_cyan}\texttt{#1}}}
-\newcommand{\cm} [1]{{\color{sw_dim}\textit{\texttt{#1}}}}
-\newcommand{\str}[1]{{\color{sw_orange}\texttt{#1}}}
-\newcommand{\cn} [1]{{\color{sw_yellow}\texttt{#1}}}
-\newcommand{\fn} [1]{{\color{sw_amber}\texttt{#1}}}
-\newcommand{\vn} [1]{{\color{sw_text}\texttt{#1}}}
-\newcommand{\pp} [1]{{\color{sw_crimson}\texttt{#1}}}
+\newcommand{\kw}[1]{{\color{sw_pink}\texttt{#1}}}               % keyword
+\newcommand{\kwb}[1]{{\color{sw_magenta}\texttt{#1}}}            % secondary keyword
+\newcommand{\ty}[1]{{\color{sw_cyan}\texttt{#1}}}               % types like int,string
+\newcommand{\cm}[1]{{\color{sw_dim}\itshape\texttt{#1}}}        % comments
+\newcommand{\str}[1]{{\color{sw_orange}\texttt{#1}}}             % string literals
+\newcommand{\cn}[1]{{\color{sw_yellow}\texttt{#1}}}             % constants, numbers
+\newcommand{\fn}[1]{{\color{sw_amber}\texttt{#1}}}              % function names
+\newcommand{\vn}[1]{{\color{sw_text}\texttt{#1}}}               % variable names
+\newcommand{\pp}[1]{{\color{sw_crimson}\texttt{#1}}}            % preprocessor
 
 \newlength{\sw@gutterwidth}
 \setlength{\sw@gutterwidth}{22pt}
 
 \lstdefinestyle{sw_inner}{
   language         = {},
+  escapeinside={(*}{*)},
   basicstyle       = \ttfamily\small\color{sw_text},
   mathescape       = true,
   numberstyle      = \fontsize{7}{9}\selectfont\color{sw_linenr}\makebox[\dimexpr\sw@gutterwidth-9pt\relax][c],
@@ -40,39 +41,41 @@
   tabsize          = 2,
   numbers          = left,
   numbersep        = 8pt,
-  xleftmargin      = \sw@gutterwidth,
-  xrightmargin     = 4pt,
   showstringspaces = false,
   breaklines       = true,
   breakatwhitespace= true,
-  gobble           = 4,
+  gobble           = 0
 }
 
 \newcommand{\sw@bottomcaption}[2]{%
-  \vspace{2pt}%
+  \par\addvspace{4pt}% Move to a new line before starting the caption
   \noindent
-  {\color{sw_iris}\rule{3pt}{0.4pt}}%
-  \hspace{4pt}%
-  {\fontsize{7}{7}\selectfont\bfseries%
-   \colorbox{sw_pink}{\color{sw_void}#1}}%
-  \ifstrempty{#2}{}{%
-    \hspace{6pt}%
-    {\fontsize{8}{8}\selectfont\color{sw_dusk}#2}%
+  \hbox to \linewidth{%
+    {\color{sw_iris}\rule{3pt}{0.4pt}}%
+    \hspace{4pt}%
+    {\fontsize{7}{7}\selectfont\bfseries%
+     \colorbox{sw_pink}{\color{sw_void}#1}}%
+    \ifstrempty{#2}{}{%
+      \hspace{6pt}%
+      {\fontsize{8}{8}\selectfont\color{sw_dusk}#2}%
+    }%
+    \hspace{4pt}%
+    {\color{sw_iris}\leaders\hrule height 0.4pt\hfill\kern0pt}%
   }%
-  \hspace{4pt}%
-  {\color{sw_iris}\leaders\hrule height 0.4pt\hfill\kern0pt}%
-  \par\vspace{4pt}%
+  \par\vspace{2pt}%
 }
 
 \NewTCBListing{codebox}{ m m }{
   enhanced, breakable,
+  before = \noindent,
+  width  = \linewidth,
   sharp corners,
   notitle,
   boxrule  = 0pt,
   leftrule = 0pt,
   colframe = sw_void,
   colback  = sw_void,
-  left     = 6pt,
+  left     = \sw@gutterwidth,
   right    = 6pt,
   top      = 6pt,
   bottom   = 6pt,
@@ -102,7 +105,8 @@
     leftrule = 0pt,
     colframe = sw_void,
     colback  = sw_void,
-    left     = 6pt,
+    width    = \linewidth,
+    left     = \sw@gutterwidth,
     right    = 6pt,
     top      = 6pt,
     bottom   = 6pt,
@@ -137,12 +141,8 @@
 \lstdefinestyle{sw_sql}  {style=sw_inner, language=SQL}
 \lstdefinestyle{sw_r}    {style=sw_inner, language=R}
 \lstdefinestyle{sw_tex}  {style=sw_inner, language=mylatex}
-\lstdefinestyle{sw_pseudo}{style=sw_inner,language=pseudocode}
+\lstdefinestyle{sw_pseudo}{style=sw_inner, language=pseudocode}
 \lstdefinestyle{sw_plain}{style=sw_inner, language={}}
-
-
-
-
 
 
 
@@ -246,3 +246,73 @@ center title,
 halign=center,
 breakable
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% ----- Dimensions -----
+\newlength{\secnumwidth}
+\setlength{\secnumwidth}{2.8em}          % width of number inside its box
+\newlength{\seclabelsep}
+\setlength{\seclabelsep}{1.2em}          % space between number box and title box
+
+% ----- Total width of number box (including its padding) -----
+\newlength{\numfullwidth}
+\setlength{\numfullwidth}{\secnumwidth + 2\fboxsep}
+
+% ----- Number box (primary_blue background) -----
+\newcommand{\sectionnumbox}[1]{%
+  \colorbox{primary_blue}{%
+    \makebox[\secnumwidth][c]{%
+      \normalfont\sffamily\bfseries\large\color{white}#1%
+    }%
+  }%
+}
+
+% ----- Title box (cream background) for numbered sections -----
+\newcommand{\sectiontitleboxnumbered}[1]{%
+  \colorbox{cream}{%
+    \parbox[c][2.4ex][c]{%
+      \dimexpr\linewidth-\numfullwidth-\seclabelsep-2\fboxsep\relax
+    }{%
+      \centering\normalfont\sffamily\bfseries\color{primary_blue}#1%
+    }%
+  }%
+}
+
+% ----- Title box for unnumbered sections (full width) -----
+\newcommand{\sectiontitleboxstar}[1]{%
+  \colorbox{cream}{%
+    \parbox[c][2.4ex][c]{\dimexpr\linewidth-2\fboxsep\relax}{%
+      \centering\normalfont\sffamily\bfseries\color{primary_blue}#1%
+    }%
+  }%
+}
+
+% ----- Numbered sections -----
+\titleformat{\section}
+  {\normalfont}
+  {\sectionnumbox{\thesection}}          % label
+  {\seclabelsep}                           % space between label and title
+  {\sectiontitleboxnumbered}                % before-code (receives title as #1)
+  [\vspace{2pt}{\color{turquoise}\rule{\textwidth}{0.5pt}}] % after-code
+
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+% ----- Unnumbered sections -----
+\titleformat{name=\section,numberless}
+  {\normalfont}
+  {}
+  {0pt}
+  {\sectiontitleboxstar}
+  [\vspace{2pt}{\color{turquoise}\rule{\textwidth}{0.5pt}}]
